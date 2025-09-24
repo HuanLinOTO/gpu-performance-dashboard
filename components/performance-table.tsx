@@ -8,8 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
 
 interface PerformanceTableProps {
   data: GPUPerformanceData[]
@@ -65,8 +68,28 @@ function SortButton({
   )
 }
 
-function PerformanceBar({ value, max, color }: { value: number; max: number; color: string }) {
-  const percentage = Math.min((value / max) * 100, 100)
+function PerformanceBar({ 
+  value, 
+  max, 
+  color, 
+  useLogScale = false 
+}: { 
+  value: number; 
+  max: number; 
+  color: string; 
+  useLogScale?: boolean 
+}) {
+  let percentage: number
+  
+  if (useLogScale) {
+    // 对数刻度：使用 log10，避免 0 值问题
+    const logValue = value > 0 ? Math.log10(value) : 0
+    const logMax = max > 0 ? Math.log10(max) : 1
+    percentage = Math.min((logValue / logMax) * 100, 100)
+  } else {
+    // 线性刻度
+    percentage = Math.min((value / max) * 100, 100)
+  }
 
   return (
     <div className="flex items-center gap-2">
@@ -80,6 +103,7 @@ function PerformanceBar({ value, max, color }: { value: number; max: number; col
 
 export function PerformanceTable({ data, sortField, sortDirection, onSort, language }: PerformanceTableProps) {
   const t = useTranslation(language)
+  const [useLogScale, setUseLogScale] = useState(false)
 
   const maxValues = {
     fp32: Math.max(...data.map((d) => d.fp32)),
@@ -90,9 +114,21 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
   return (
     <Card className="border-border/50">
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-semibold text-balance">
-          {language === "zh" ? "性能基准测试" : "Performance Benchmarks"}
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg font-semibold text-balance">
+            {language === "zh" ? "性能基准测试" : "Performance Benchmarks"}
+          </CardTitle>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="log-scale"
+              checked={useLogScale}
+              onCheckedChange={setUseLogScale}
+            />
+            <Label htmlFor="log-scale" className="text-sm">
+              {language === "zh" ? "对数刻度" : "Log Scale"}
+            </Label>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto">
@@ -149,13 +185,13 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" />
+                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" useLogScale={useLogScale} />
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" />
+                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" useLogScale={useLogScale} />
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" />
+                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" useLogScale={useLogScale} />
                   </TableCell>
                   <TableCell>
                     <div className="text-xs text-muted-foreground max-w-[200px] truncate">{item.note}</div>
