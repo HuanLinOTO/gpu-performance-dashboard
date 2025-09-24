@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import { useGPUData, useFilteredData } from "@/hooks/use-gpu-data"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslation } from "@/lib/i18n"
@@ -78,10 +79,19 @@ export function GPUDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+      <motion.div 
+        className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+      >
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <h1 className="text-3xl font-bold text-balance">{t.dashboard.title}</h1>
               <p className="text-muted-foreground mt-1">{t.dashboard.subtitle}</p>
               <span className="text-xs text-muted-foreground block mt-2">
@@ -97,8 +107,13 @@ export function GPUDashboard() {
                   https://github.com/zzc0721/torch-performance-test-data
                 </a>
               </span>
-            </div>
-            <div className="flex items-center gap-2">
+            </motion.div>
+            <motion.div 
+              className="flex items-center gap-2"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
               <LanguageToggle />
               <Badge variant="outline" className="text-xs">
                 {data.length} {t.dashboard.devices}
@@ -108,64 +123,82 @@ export function GPUDashboard() {
                   {t.dashboard.updated} {lastUpdated.toLocaleTimeString()}
                 </Badge>
               )}
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Stats Overview */}
-        <PerformanceStats data={data} language={language} />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <PerformanceStats data={data} language={language} />
+        </motion.div>
 
         {/* Filter Controls */}
-        <FilterControls
-          data={data}
-          filters={filters}
-          onFiltersChange={setFilters}
-          onRefresh={refetch}
-          isLoading={loading}
-          language={language}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <FilterControls
+            data={data}
+            filters={filters}
+            onFiltersChange={setFilters}
+            onRefresh={refetch}
+            isLoading={loading}
+            language={language}
+          />
+        </motion.div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="table" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:grid-cols-2">
-            <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-200">
-              <Database className="h-4 w-4" />
-              <span className="hidden sm:inline">{t.tabs.table}</span>
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2 transition-all duration-200">
-              <BarChart3 className="h-4 w-4" />
-              <span className="hidden sm:inline">{language === "zh" ? "分析与对比" : "Analytics & Comparison"}</span>
-            </TabsTrigger>
-          </TabsList>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          <Tabs defaultValue="table" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:grid-cols-2">
+              <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-200">
+                <Database className="h-4 w-4" />
+                <span className="hidden sm:inline">{t.tabs.table}</span>
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="flex items-center gap-2 transition-all duration-200">
+                <BarChart3 className="h-4 w-4" />
+                <span className="hidden sm:inline">{language === "zh" ? "分析与对比" : "Analytics & Comparison"}</span>
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="table" className="space-y-6 animate-in fade-in-50 duration-300">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">{t.table.performanceData}</h2>
-              <Badge variant="outline">
-                {filteredData.length} {t.table.of} {data.length} {t.dashboard.devices}
-              </Badge>
-            </div>
-            <PerformanceTable
-              data={filteredData}
-              sortField={sortField}
-              sortDirection={sortDirection}
-              onSort={handleSort}
-              language={language}
-            />
-          </TabsContent>
+            <TabsContent value="table" className="space-y-6 animate-in fade-in-50 duration-300">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">{t.table.performanceData}</h2>
+                <Badge variant="outline">
+                  {filteredData.length} {t.table.of} {data.length} {t.dashboard.devices}
+                </Badge>
+              </div>
+              <PerformanceTable
+                data={filteredData}
+                sortField={sortField}
+                sortDirection={sortDirection}
+                onSort={handleSort}
+                language={language}
+              />
+            </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-6 animate-in fade-in-50 duration-300">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">{language === "zh" ? "性能分析与对比" : "Performance Analytics & Comparison"}</h2>
-              <Badge variant="outline">
-                {language === "zh" ? "综合分析" : "Comprehensive Analysis"}
-              </Badge>
-            </div>
-            <PlatformAnalytics data={data} language={language} />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="analytics" className="space-y-6 animate-in fade-in-50 duration-300">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">{language === "zh" ? "性能分析与对比" : "Performance Analytics & Comparison"}</h2>
+                <Badge variant="outline">
+                  {language === "zh" ? "综合分析" : "Comprehensive Analysis"}
+                </Badge>
+              </div>
+              <PlatformAnalytics data={data} language={language} />
+            </TabsContent>
+          </Tabs>
+        </motion.div>
       </div>
     </div>
   )

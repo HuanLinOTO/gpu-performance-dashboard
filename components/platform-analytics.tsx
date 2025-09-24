@@ -10,6 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { getTopPerformers } from "@/lib/data-utils"
 import { Trophy, Zap, TrendingUp } from "lucide-react"
 import { useState, useMemo } from "react"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface PlatformAnalyticsProps {
@@ -210,18 +211,30 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
     <div className="space-y-6">
       {/* 顶级性能排行榜 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-yellow-500" />
-              {t.charts.topFp16}
-            </CardTitle>
-          </CardHeader>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Card className="border-border/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <Trophy className="h-4 w-4 text-yellow-500" />
+                {t.charts.topFp16}
+              </CardTitle>
+            </CardHeader>
           <CardContent className="space-y-3">
             {topFp16.slice(0, 5).map((device, index) => (
-              <div
+              <motion.div
                 key={`${device.device}-${index}`}
                 className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.05 + 0.1,
+                  ease: "easeOut"
+                }}
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
@@ -245,23 +258,36 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                   <div className="font-bold text-sm">{device.fp16.toFixed(1)}</div>
                   <div className="text-xs text-muted-foreground">TFLOPS</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </CardContent>
-        </Card>
+          </Card>
+        </motion.div>
 
-        <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Zap className="h-4 w-4 text-orange-500" />
-              {t.charts.topFp32}
-            </CardTitle>
-          </CardHeader>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card className="border-border/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <Zap className="h-4 w-4 text-orange-500" />
+                {t.charts.topFp32}
+              </CardTitle>
+            </CardHeader>
           <CardContent className="space-y-3">
             {topFp32.map((device, index) => (
-              <div
+              <motion.div
                 key={`${device.device}-${index}`}
                 className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.05 + 0.25,
+                  ease: "easeOut"
+                }}
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-6 h-6 rounded-full bg-chart-1 text-white text-xs font-bold">
@@ -285,23 +311,36 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                   <div className="font-bold text-sm">{device.fp32.toFixed(1)}</div>
                   <div className="text-xs text-muted-foreground">TFLOPS</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </CardContent>
-        </Card>
+          </Card>
+        </motion.div>
 
-        <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-green-500" />
-              {t.charts.topBf16}
-            </CardTitle>
-          </CardHeader>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Card className="border-border/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-green-500" />
+                {t.charts.topBf16}
+              </CardTitle>
+            </CardHeader>
           <CardContent className="space-y-3">
             {topBf16.map((device, index) => (
-              <div
+              <motion.div
                 key={`${device.device}-${index}`}
                 className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.05 + 0.4,
+                  ease: "easeOut"
+                }}
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center w-6 h-6 rounded-full bg-chart-3 text-white text-xs font-bold">
@@ -325,10 +364,11 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                   <div className="font-bold text-sm">{device.bf16.toFixed(1)}</div>
                   <div className="text-xs text-muted-foreground">TFLOPS</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </CardContent>
-        </Card>
+          </Card>
+        </motion.div>
       </div>
 
       {deviceComparisons.length === 0 ? (

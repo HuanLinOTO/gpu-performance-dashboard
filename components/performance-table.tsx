@@ -4,6 +4,8 @@ import type React from "react"
 import type { GPUPerformanceData, SortField, SortDirection, Language } from "@/lib/types"
 import { useTranslation } from "@/lib/i18n"
 import { ContributorCell } from "./contributor-cell"
+import { AnimatedTableRow } from "./animated-table-row"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -72,12 +74,14 @@ function PerformanceBar({
   value,
   max,
   color,
-  useLogScale = false
+  useLogScale = false,
+  index = 0
 }: {
   value: number;
   max: number;
   color: string;
-  useLogScale?: boolean
+  useLogScale?: boolean;
+  index?: number;
 }) {
   let percentage: number
 
@@ -93,9 +97,25 @@ function PerformanceBar({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-mono w-16 text-right">{value.toFixed(2)}</span>
+      <motion.span 
+        className="text-sm font-mono w-16 text-right"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, delay: index * 0.02 + 0.1 }}
+      >
+        {value.toFixed(2)}
+      </motion.span>
       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden max-w-24">
-        <div className={cn("h-full transition-all duration-300", color)} style={{ width: `${percentage}%` }} />
+        <motion.div 
+          className={cn("h-full", color)} 
+          initial={{ width: "0%" }}
+          animate={{ width: `${percentage}%` }}
+          transition={{
+            duration: 0.6,
+            delay: index * 0.02 + 0.15,
+            ease: "easeOut"
+          }}
+        />
       </div>
     </div>
   )
@@ -166,8 +186,9 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
             </TableHeader>
             <TableBody>
               {data.map((item, index) => (
-                <TableRow
+                <AnimatedTableRow
                   key={`${item.device}-${index}`}
+                  index={index}
                   className="border-border/30 hover:bg-accent/30 transition-colors"
                 >
                   <TableCell className="font-medium">
@@ -185,13 +206,13 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" useLogScale={useLogScale} />
+                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" useLogScale={useLogScale} index={index * 3 + 0} />
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" useLogScale={useLogScale} />
+                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" useLogScale={useLogScale} index={index * 3 + 1} />
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" useLogScale={useLogScale} />
+                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" useLogScale={useLogScale} index={index * 3 + 2} />
                   </TableCell>
                   <TableCell>
                     <div className="text-xs text-muted-foreground max-w-[200px] truncate">{item.note}</div>
@@ -199,7 +220,7 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                   <TableCell>
                     <ContributorCell contributor={item.contributor} />
                   </TableCell>
-                </TableRow>
+                </AnimatedTableRow>
               ))}
             </TableBody>
           </Table>
