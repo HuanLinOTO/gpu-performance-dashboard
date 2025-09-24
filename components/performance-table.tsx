@@ -68,19 +68,19 @@ function SortButton({
   )
 }
 
-function PerformanceBar({ 
-  value, 
-  max, 
-  color, 
-  useLogScale = false 
-}: { 
-  value: number; 
-  max: number; 
-  color: string; 
-  useLogScale?: boolean 
+function PerformanceBar({
+  value,
+  max,
+  color,
+  useLogScale = false
+}: {
+  value: number;
+  max: number;
+  color: string;
+  useLogScale?: boolean
 }) {
   let percentage: number
-  
+
   if (useLogScale) {
     // 对数刻度：使用 log10，避免 0 值问题
     const logValue = value > 0 ? Math.log10(value) : 0
