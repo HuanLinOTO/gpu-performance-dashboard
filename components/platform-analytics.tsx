@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DeviceName } from "./device-name"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import { getTopPerformers } from "@/lib/data-utils"
 import { Trophy, Zap, TrendingUp } from "lucide-react"
@@ -223,44 +224,44 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                 {t.charts.topFp16}
               </CardTitle>
             </CardHeader>
-          <CardContent className="space-y-3">
-            {topFp16.slice(0, 5).map((device, index) => (
-              <motion.div
-                key={`${device.device}-${index}`}
-                className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{
-                  duration: 0.3,
-                  delay: index * 0.05 + 0.1,
-                  ease: "easeOut"
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
-                    {index + 1}
+            <CardContent className="space-y-3">
+              {topFp16.slice(0, 5).map((device, index) => (
+                <motion.div
+                  key={`${device.device}-${index}`}
+                  className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.05 + 0.1,
+                    ease: "easeOut"
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <DeviceName name={device.device} className="font-medium text-sm truncate max-w-32" />
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-xs mt-1",
+                          PLATFORM_BG_COLORS[device.platform as keyof typeof PLATFORM_BG_COLORS] ||
+                          PLATFORM_BG_COLORS.Unknown,
+                        )}
+                      >
+                        {t.platforms[device.platform as keyof typeof t.platforms] || device.platform}
+                      </Badge>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-medium text-sm truncate max-w-32">{device.device}</div>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-xs mt-1",
-                        PLATFORM_BG_COLORS[device.platform as keyof typeof PLATFORM_BG_COLORS] ||
-                        PLATFORM_BG_COLORS.Unknown,
-                      )}
-                    >
-                      {t.platforms[device.platform as keyof typeof t.platforms] || device.platform}
-                    </Badge>
+                  <div className="text-right">
+                    <div className="font-bold text-sm">{device.fp16.toFixed(1)}</div>
+                    <div className="text-xs text-muted-foreground">TFLOPS</div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-bold text-sm">{device.fp16.toFixed(1)}</div>
-                  <div className="text-xs text-muted-foreground">TFLOPS</div>
-                </div>
-              </motion.div>
-            ))}
-          </CardContent>
+                </motion.div>
+              ))}
+            </CardContent>
           </Card>
         </motion.div>
 
@@ -276,44 +277,44 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                 {t.charts.topFp32}
               </CardTitle>
             </CardHeader>
-          <CardContent className="space-y-3">
-            {topFp32.map((device, index) => (
-              <motion.div
-                key={`${device.device}-${index}`}
-                className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{
-                  duration: 0.3,
-                  delay: index * 0.05 + 0.25,
-                  ease: "easeOut"
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-chart-1 text-white text-xs font-bold">
-                    {index + 1}
+            <CardContent className="space-y-3">
+              {topFp32.map((device, index) => (
+                <motion.div
+                  key={`${device.device}-${index}`}
+                  className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.05 + 0.25,
+                    ease: "easeOut"
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-chart-1 text-white text-xs font-bold">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <DeviceName name={device.device} className="font-medium text-sm truncate max-w-32" />
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-xs mt-1",
+                          PLATFORM_BG_COLORS[device.platform as keyof typeof PLATFORM_BG_COLORS] ||
+                          PLATFORM_BG_COLORS.Unknown,
+                        )}
+                      >
+                        {t.platforms[device.platform as keyof typeof t.platforms] || device.platform}
+                      </Badge>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-medium text-sm truncate max-w-32">{device.device}</div>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-xs mt-1",
-                        PLATFORM_BG_COLORS[device.platform as keyof typeof PLATFORM_BG_COLORS] ||
-                        PLATFORM_BG_COLORS.Unknown,
-                      )}
-                    >
-                      {t.platforms[device.platform as keyof typeof t.platforms] || device.platform}
-                    </Badge>
+                  <div className="text-right">
+                    <div className="font-bold text-sm">{device.fp32.toFixed(1)}</div>
+                    <div className="text-xs text-muted-foreground">TFLOPS</div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-bold text-sm">{device.fp32.toFixed(1)}</div>
-                  <div className="text-xs text-muted-foreground">TFLOPS</div>
-                </div>
-              </motion.div>
-            ))}
-          </CardContent>
+                </motion.div>
+              ))}
+            </CardContent>
           </Card>
         </motion.div>
 
@@ -329,44 +330,44 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                 {t.charts.topBf16}
               </CardTitle>
             </CardHeader>
-          <CardContent className="space-y-3">
-            {topBf16.map((device, index) => (
-              <motion.div
-                key={`${device.device}-${index}`}
-                className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{
-                  duration: 0.3,
-                  delay: index * 0.05 + 0.4,
-                  ease: "easeOut"
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-chart-3 text-white text-xs font-bold">
-                    {index + 1}
+            <CardContent className="space-y-3">
+              {topBf16.map((device, index) => (
+                <motion.div
+                  key={`${device.device}-${index}`}
+                  className="flex items-center justify-between p-2 rounded-lg bg-accent/30"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.05 + 0.4,
+                    ease: "easeOut"
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-chart-3 text-white text-xs font-bold">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <DeviceName name={device.device} className="font-medium text-sm truncate max-w-32" />
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-xs mt-1",
+                          PLATFORM_BG_COLORS[device.platform as keyof typeof PLATFORM_BG_COLORS] ||
+                          PLATFORM_BG_COLORS.Unknown,
+                        )}
+                      >
+                        {t.platforms[device.platform as keyof typeof t.platforms] || device.platform}
+                      </Badge>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-medium text-sm truncate max-w-32">{device.device}</div>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-xs mt-1",
-                        PLATFORM_BG_COLORS[device.platform as keyof typeof PLATFORM_BG_COLORS] ||
-                        PLATFORM_BG_COLORS.Unknown,
-                      )}
-                    >
-                      {t.platforms[device.platform as keyof typeof t.platforms] || device.platform}
-                    </Badge>
+                  <div className="text-right">
+                    <div className="font-bold text-sm">{device.bf16.toFixed(1)}</div>
+                    <div className="text-xs text-muted-foreground">TFLOPS</div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-bold text-sm">{device.bf16.toFixed(1)}</div>
-                  <div className="text-xs text-muted-foreground">TFLOPS</div>
-                </div>
-              </motion.div>
-            ))}
-          </CardContent>
+                </motion.div>
+              ))}
+            </CardContent>
           </Card>
         </motion.div>
       </div>
@@ -410,7 +411,7 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                           <SelectItem key={comparison.device} value={comparison.device}>
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2">
-                                <span>{comparison.device}</span>
+                                <DeviceName name={comparison.device} className="text-sm" />
                                 {isMultiPlatform && (
                                   <Badge variant="secondary" className="text-xs">
                                     {language === "zh" ? "多平台" : "Multi-platform"}

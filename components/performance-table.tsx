@@ -5,6 +5,7 @@ import type { GPUPerformanceData, SortField, SortDirection, Language } from "@/l
 import { useTranslation } from "@/lib/i18n"
 import { ContributorCell } from "./contributor-cell"
 import { AnimatedTableRow } from "./animated-table-row"
+import { DeviceName } from "./device-name"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -97,7 +98,7 @@ function PerformanceBar({
 
   return (
     <div className="flex items-center gap-2">
-      <motion.span 
+      <motion.span
         className="text-sm font-mono w-16 text-right"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -106,8 +107,8 @@ function PerformanceBar({
         {value.toFixed(2)}
       </motion.span>
       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden max-w-24">
-        <motion.div 
-          className={cn("h-full", color)} 
+        <motion.div
+          className={cn("h-full", color)}
           initial={{ width: "0%" }}
           animate={{ width: `${percentage}%` }}
           transition={{
@@ -192,7 +193,7 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                   className="border-border/30 hover:bg-accent/30 transition-colors"
                 >
                   <TableCell className="font-medium">
-                    <div className="font-mono text-sm">{item.device}</div>
+                    <DeviceName name={item.device} />
                   </TableCell>
                   <TableCell>
                     <Badge
