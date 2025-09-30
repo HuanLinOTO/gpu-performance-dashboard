@@ -43,16 +43,16 @@ export function GPUDashboard() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">{t.errors.loadingData}</p>
-        </div>
-      </div>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center">
+  //       <div className="text-center space-y-4">
+  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+  //         <p className="text-muted-foreground">{t.errors.loadingData}</p>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   if (error) {
     return (
@@ -79,7 +79,7 @@ export function GPUDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <motion.div 
+      <motion.div
         className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -108,7 +108,7 @@ export function GPUDashboard() {
                 </a>
               </span>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="flex items-center gap-2"
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}

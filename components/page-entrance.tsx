@@ -6,18 +6,21 @@ import { Zap, BarChart3, Cpu } from "lucide-react"
 
 interface PageEntranceProps {
     children: React.ReactNode
+    isDataLoaded: boolean
 }
 
-export function PageEntrance({ children }: PageEntranceProps) {
+export function PageEntrance({ children, isDataLoaded }: PageEntranceProps) {
     const [showContent, setShowContent] = useState(false)
     const [currentStep, setCurrentStep] = useState(0)
+    const [minAnimationComplete, setMinAnimationComplete] = useState(false)
 
     useEffect(() => {
         const timer1 = setTimeout(() => setCurrentStep(1), 300)
         const timer2 = setTimeout(() => setCurrentStep(2), 600)
         const timer3 = setTimeout(() => setCurrentStep(3), 900)
+        // 设置最小动画时间为 1.5 秒
         const timer4 = setTimeout(() => {
-            setShowContent(true)
+            setMinAnimationComplete(true)
         }, 1500)
 
         return () => {
@@ -27,6 +30,17 @@ export function PageEntrance({ children }: PageEntranceProps) {
             clearTimeout(timer4)
         }
     }, [])
+
+    // 只有当数据加载完成且最小动画时间已过，才显示内容
+    useEffect(() => {
+        if (isDataLoaded && minAnimationComplete) {
+            // 添加一个小延迟，使过渡更平滑
+            const timer = setTimeout(() => {
+                setShowContent(true)
+            }, 300)
+            return () => clearTimeout(timer)
+        }
+    }, [isDataLoaded, minAnimationComplete])
 
     if (showContent) {
         return (
@@ -136,7 +150,7 @@ export function PageEntrance({ children }: PageEntranceProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.2, duration: 0.3 }}
-                    className="flex justify-center"
+                    className="flex flex-col items-center space-y-4"
                 >
                     <div className="flex space-x-1">
                         {[0, 1, 2].map((i) => (
@@ -154,6 +168,14 @@ export function PageEntrance({ children }: PageEntranceProps) {
                             />
                         ))}
                     </div>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.5, duration: 0.3 }}
+                        className="text-sm text-muted-foreground"
+                    >
+                        {isDataLoaded ? "Ready!" : "Loading data..."}
+                    </motion.p>
                 </motion.div>
             </div>
         </div>
