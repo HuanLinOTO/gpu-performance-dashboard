@@ -7,9 +7,9 @@ const PLATFORM_TAGS = {
   GCP: "GCP",
   实体机: "Physical Machine",
   笔记本: "Laptop",
+  docker: "Docker",
   优云智算: "UCloud",
   智算云扉: "AIGate",
-  docker: "Docker",
 }
 
 export function extractPlatform(note: string): string {
@@ -59,39 +59,48 @@ export function parseMarkdownTable(markdown: string): GPUPerformanceData[] {
 // Cache variables
 let cachedData: GPUPerformanceData[] | null = null;
 let cachedAt: number | null = null;
+let fetching_promise: Promise<GPUPerformanceData[]> | null = null;
 
 export async function fetchGPUData(): Promise<GPUPerformanceData[]> {
+  console.log("Fetching GPU data...");
+
   // 1分钟缓存
   const now = Date.now();
   if (cachedData && cachedAt && now - cachedAt < 60 * 1000) {
     return cachedData;
   }
-  // 先尝试 GitHub
-  try {
-    const response = await fetch(GITHUB_RAW_URL, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
-    if (!response.ok) throw new Error("github fetch failed");
-    const markdown = await response.text();
-    const data = parseMarkdownTable(markdown);
-    cachedData = data;
-    cachedAt = now;
-    return data;
-  } catch (error) {
-    console.error("Error fetching GPU data from GitHub, fallback to API:", error);
-    // 降级到本地 API
-    try {
-      const apiResp = await fetch("/api/database");
-      if (!apiResp.ok) throw new Error("api fetch failed");
-      const apiData = await apiResp.json();
-      cachedData = apiData;
-      cachedAt = now;
-      return apiData;
-    } catch (apiError) {
-      console.error("Error fetching GPU data from API:", apiError);
-      return [];
-    }
+
+  if (!fetching_promise) {
+    fetching_promise = (async () => {
+      // 先尝试 GitHub
+      try {
+        const response = await fetch(GITHUB_RAW_URL, {
+          next: { revalidate: 300 }, // Cache for 5 minutes
+        });
+        if (!response.ok) throw new Error("github fetch failed");
+        const markdown = await response.text();
+        const data = parseMarkdownTable(markdown);
+        cachedData = data;
+        cachedAt = now;
+        return data;
+      } catch (error) {
+        console.error("Error fetching GPU data from GitHub, fallback to API:", error);
+        // 降级到本地 API
+        try {
+          const apiResp = await fetch("/api/database");
+          if (!apiResp.ok) throw new Error("api fetch failed");
+          const apiData = await apiResp.json();
+          cachedData = apiData;
+          cachedAt = now;
+          return apiData;
+        } catch (apiError) {
+          console.error("Error fetching GPU data from API:", apiError);
+          return [];
+        }
+      }
+    })();
   }
+  return await fetching_promise;
 }
 
 export function calculatePlatformStats(data: GPUPerformanceData[]): PlatformStats[] {
