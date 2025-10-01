@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import { handleAdLinkClick, getAdPlatformUrl, type AdPlatform } from "@/lib/ad-utils"
 
 interface PerformanceTableProps {
   data: GPUPerformanceData[]
@@ -203,7 +204,20 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                       className={cn(
                         "text-xs font-medium",
                         PLATFORM_COLORS[item.platform as keyof typeof PLATFORM_COLORS] || PLATFORM_COLORS.Unknown,
+                        (item.platform === "UCloud" || item.platform === "AIGate") && "cursor-pointer hover:opacity-80 transition-opacity"
                       )}
+                      onClick={(e) => {
+                        if (!item.platform) return;
+                        const platformMap: Record<string, AdPlatform> = {
+                          'UCloud': 'ucloud',
+                          'AIGate': 'aigate',
+                        };
+                        const adPlatform = platformMap[item.platform];
+                        if (adPlatform) {
+                          const url = getAdPlatformUrl(adPlatform);
+                          handleAdLinkClick(adPlatform, 'table', url, e);
+                        }
+                      }}
                     >
                       {t.platforms[item.platform as keyof typeof t.platforms] || item.platform}
                     </Badge>
