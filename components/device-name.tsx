@@ -12,8 +12,9 @@ export const DeviceName = memo(function DeviceName({ name, className = "font-mon
     const isNvidia = upperName.includes('NVIDIA')
     const isAmd = upperName.includes('AMD')
     const isAscend = upperName.includes('ASCEND')
+    const isHygon = upperName.includes('HYGON')
 
-    if (!isNvidia && !isAmd && !isAscend) {
+    if (!isNvidia && !isAmd && !isAscend && !isHygon) {
         return <div className={className}>{name}</div>
     }
 
@@ -27,6 +28,9 @@ export const DeviceName = memo(function DeviceName({ name, className = "font-mon
             )}
             {isAscend && (
                 <img width="16" height="16" src="https://img.icons8.com/external-tal-revivo-color-tal-revivo/24/external-huawei-technologies-company-a-chinese-multinational-technology-provides-telecommunications-equipment-and-consumer-electronics-logo-color-tal-revivo.png" alt="huawei-ascend" />
+            )}
+            {isHygon && (
+                <img width="16" height="16" src="https://www.hygon.cn/favicon.ico" alt="hygon" />
             )}
             <div className={className}>{name}</div>
         </div>
