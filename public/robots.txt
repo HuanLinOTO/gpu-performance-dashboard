@@ -1,0 +1,36 @@
+# GPU Performance Dashboard - Robots.txt
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Crawl-delay for polite crawling
+Crawl-delay: 0.5
+
+# Sitemap location
+Sitemap: https://gpu-performance-dashboard.vercel.app/sitemap.xml
+
+# Block admin paths if any
+Disallow: /api/
+Disallow: /_next/static/
+Disallow: /*.json$
+
+# Allow important resources
+Allow: /favicon.svg
+Allow: /og-image.png
+
+# Special rules for common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /

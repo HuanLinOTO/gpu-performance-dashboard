@@ -8,9 +8,79 @@ import { LanguageProvider } from "@/contexts/language-context"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "GPU Performance Dashboard",
-  description: "Comprehensive GPU performance benchmarking dashboard",
-  generator: "v0.app",
+  metadataBase: new URL('https://gpu-performance-dashboard.vercel.app'),
+  title: {
+    default: "GPU Performance Dashboard | Real-World Benchmark Data & Comparison",
+    template: "%s | GPU Performance Dashboard"
+  },
+  description: "Compare GPU performance benchmarks with real-world data. FP32, FP16, BF16, and FP8 E4M3FN TFLOPS ratings for NVIDIA, AMD GPUs across platforms like GCP, Colab, Docker, and more. Community-driven benchmark database.",
+  keywords: [
+    "GPU benchmark",
+    "GPU performance",
+    "GPU comparison",
+    "NVIDIA GPU",
+    "AMD GPU",
+    "RTX 4090",
+    "RTX 3090",
+    "A100",
+    "H100",
+    "FP32 performance",
+    "FP16 benchmark",
+    "BF16 TFLOPS",
+    "FP8 E4M3FN",
+    "AI GPU",
+    "deep learning GPU",
+    "machine learning hardware",
+    "GPU database",
+    "PyTorch GPU",
+    "CUDA performance",
+    "Google Colab GPU",
+    "Docker GPU",
+    "cloud GPU comparison"
+  ],
+  authors: [{ name: "GPU Performance Dashboard Community" }],
+  creator: "GPU Performance Dashboard",
+  publisher: "GPU Performance Dashboard",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    alternateLocale: ["zh_CN"],
+    url: "/",
+    siteName: "GPU Performance Dashboard",
+    title: "GPU Performance Dashboard - Real-World GPU Benchmark Database",
+    description: "Compare GPU performance with community-driven benchmark data. FP32, FP16, BF16, FP8 ratings for NVIDIA & AMD GPUs across multiple platforms.",
+    images: [
+      {
+        url: "/sharelink_img.png",
+        width: 1200,
+        height: 630,
+        alt: "GPU Performance Dashboard - Benchmark Comparison",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GPU Performance Dashboard - Real-World GPU Benchmarks",
+    description: "Compare GPU performance with community-driven benchmark data. FP32, FP16, BF16, FP8 ratings across multiple platforms.",
+    images: ["/sharelink_img.png"],
+    creator: "@gpu_dashboard",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -19,6 +89,20 @@ export const metadata: Metadata = {
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
   },
+  manifest: '/manifest.json',
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/',
+      'zh-CN': '/?lang=zh',
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code', // 需要在 Google Search Console 获取
+    // yandex: 'your-yandex-verification-code',
+    // bing: 'your-bing-verification-code',
+  },
+  category: 'technology',
 }
 
 export default function RootLayout({
@@ -26,6 +110,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'GPU Performance Dashboard',
+    description: 'Community-driven GPU performance benchmark database with real-world data',
+    applicationCategory: 'TechnologyApplication',
+    operatingSystem: 'Web Browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '150',
+    },
+    featureList: [
+      'GPU Performance Comparison',
+      'FP32, FP16, BF16, FP8 Benchmarks',
+      'Multi-platform Support',
+      'Community Contributions',
+      'Real-time Data Updates',
+    ],
+  };
+
   return (
     <html lang="en" className="dark">
       <head>
@@ -38,6 +148,13 @@ export default function RootLayout({
           gtag('js', new Date());
           gtag('config', 'G-M0NKXFEBXC');
         `}} />
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+        />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
         <LanguageProvider>

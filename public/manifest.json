@@ -1,0 +1,22 @@
+{
+  "name": "GPU Performance Dashboard",
+  "short_name": "GPU Bench",
+  "description": "Community-driven GPU performance benchmark database with real-world data",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "developer tools"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/"
+}
