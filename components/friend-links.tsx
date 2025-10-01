@@ -30,7 +30,7 @@ const friendLinks: FriendLink[] = [
     {
         name: "智算云扉 | AIGate",
         url: "https://account.aigate.cc/?channel=E4Z7B2W5C&coupon=AM8HLIZE2C",
-        description: "注册领取 20 算力加 8h 4090D体验"
+        description: "注册领取 20 算力加 16h 4090D体验"
     },
     // 可以添加更多友链
 ]
