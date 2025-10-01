@@ -11,6 +11,7 @@ import { PerformanceStats } from "./performance-stats"
 import { FilterControls } from "./filter-controls"
 import { PlatformAnalytics } from "./platform-analytics"
 import { LanguageToggle } from "./language-toggle"
+import { FriendLinks } from "./friend-links"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -93,9 +94,9 @@ export function GPUDashboard() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex items-center gap-3"
             >
-              <img 
-                src="/favicon.svg" 
-                alt="GPU Dashboard Logo" 
+              <img
+                src="/favicon.svg"
+                alt="GPU Dashboard Logo"
                 className="w-10 h-10"
               />
               <div>
@@ -208,6 +209,9 @@ export function GPUDashboard() {
           </Tabs>
         </motion.div>
       </div>
+
+      {/* 友链区域 */}
+      <FriendLinks />
     </div>
   )
 }
