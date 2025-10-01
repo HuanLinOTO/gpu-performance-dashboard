@@ -15,7 +15,7 @@ const PLATFORM_TAGS = {
 
 export function extractPlatform(note: string): string {
   for (const [tag, platform] of Object.entries(PLATFORM_TAGS)) {
-    if (note.includes(tag)) {
+    if (note.toLowerCase().includes(tag.toLowerCase())) {
       return platform
     }
   }
