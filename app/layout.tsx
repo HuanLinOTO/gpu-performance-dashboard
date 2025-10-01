@@ -11,6 +11,14 @@ export const metadata: Metadata = {
   title: "GPU Performance Dashboard",
   description: "Comprehensive GPU performance benchmarking dashboard",
   generator: "v0.app",
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
 }
 
 export default function RootLayout({

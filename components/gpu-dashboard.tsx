@@ -91,22 +91,30 @@ export function GPUDashboard() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex items-center gap-3"
             >
-              <h1 className="text-3xl font-bold text-balance">{t.dashboard.title}</h1>
-              <p className="text-muted-foreground mt-1">{t.dashboard.subtitle}</p>
-              <span className="text-xs text-muted-foreground block mt-2">
-                {language === "zh"
-                  ? "数据来源："
-                  : "Data source: "}
-                <a
-                  href="https://github.com/zzc0721/torch-performance-test-data"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline text-blue-500 hover:text-blue-400 ml-1"
-                >
-                  https://github.com/zzc0721/torch-performance-test-data
-                </a>
-              </span>
+              <img 
+                src="/favicon.svg" 
+                alt="GPU Dashboard Logo" 
+                className="w-10 h-10"
+              />
+              <div>
+                <h1 className="text-3xl font-bold text-balance">{t.dashboard.title}</h1>
+                <p className="text-muted-foreground mt-1">{t.dashboard.subtitle}</p>
+                <span className="text-xs text-muted-foreground block mt-2">
+                  {language === "zh"
+                    ? "数据来源："
+                    : "Data source: "}
+                  <a
+                    href="https://github.com/zzc0721/torch-performance-test-data"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline text-blue-500 hover:text-blue-400 ml-1"
+                  >
+                    https://github.com/zzc0721/torch-performance-test-data
+                  </a>
+                </span>
+              </div>
             </motion.div>
             <motion.div
               className="flex items-center gap-2"
