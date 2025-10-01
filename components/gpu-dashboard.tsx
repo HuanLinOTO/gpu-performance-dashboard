@@ -94,11 +94,11 @@ export function GPUDashboard() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex items-center gap-3"
             >
-              <img
+              {/* <img
                 src="/favicon.svg"
                 alt="GPU Dashboard Logo"
                 className="w-10 h-10"
-              />
+              /> */}
               <div>
                 <h1 className="text-3xl font-bold text-balance">{t.dashboard.title}</h1>
                 <p className="text-muted-foreground mt-1">{t.dashboard.subtitle}</p>
