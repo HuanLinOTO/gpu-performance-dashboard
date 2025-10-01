@@ -129,10 +129,18 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
   const t = useTranslation(language)
   const [useLogScale, setUseLogScale] = useState(false)
 
+  // 检查是否应该显示 FP8 列 - 只要有至少一条数据定义了 fp8 属性(即使值为 undefined),就显示该列
+  // 这样即使数据为空,只要数据结构支持 FP8,就会显示该列
+  const hasFp8Column = data.some(d => 'fp8' in d) || data.length === 0
+
+  // 获取有效的 FP8 数据用于计算最大值
+  const fp8Values = data.filter(d => d.fp8 !== undefined && !isNaN(d.fp8) && d.fp8 > 0)
+
   const maxValues = {
     fp32: Math.max(...data.map((d) => d.fp32)),
     fp16: Math.max(...data.map((d) => d.fp16)),
     bf16: Math.max(...data.map((d) => d.bf16)),
+    fp8: fp8Values.length > 0 ? Math.max(...fp8Values.map((d) => d.fp8!)) : 1,
   }
 
   return (
@@ -184,6 +192,13 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                     BF16
                   </SortButton>
                 </TableHead>
+                {hasFp8Column && (
+                  <TableHead className="w-[140px]">
+                    <SortButton field="fp8" currentField={sortField} direction={sortDirection} onSort={onSort}>
+                      FP8 E4M3FN
+                    </SortButton>
+                  </TableHead>
+                )}
                 <TableHead className="min-w-[200px]">{language === "zh" ? "环境" : "Environment"}</TableHead>
                 <TableHead className="w-[140px]">{t.table.contributor}</TableHead>
               </TableRow>
@@ -223,14 +238,26 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" useLogScale={useLogScale} index={index * 3 + 0} />
+                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" useLogScale={useLogScale} index={index * 4 + 0} />
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" useLogScale={useLogScale} index={index * 3 + 1} />
+                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" useLogScale={useLogScale} index={index * 4 + 1} />
                   </TableCell>
                   <TableCell>
-                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" useLogScale={useLogScale} index={index * 3 + 2} />
+                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" useLogScale={useLogScale} index={index * 4 + 2} />
                   </TableCell>
+                  {hasFp8Column && (
+                    <TableCell>
+                      {item.fp8 !== undefined && !isNaN(item.fp8) && item.fp8 > 0 ? (
+                        <PerformanceBar value={item.fp8} max={maxValues.fp8} color="bg-chart-4" useLogScale={useLogScale} index={index * 4 + 3} />
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-mono w-16 text-right text-muted-foreground">N/A</span>
+                          <div className="flex-1 h-2 max-w-24" />
+                        </div>
+                      )}
+                    </TableCell>
+                  )}
                   <TableCell>
                     <div className="text-xs text-muted-foreground max-w-[200px] truncate">{item.note}</div>
                   </TableCell>

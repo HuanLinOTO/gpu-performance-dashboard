@@ -44,12 +44,13 @@ export interface Translations {
     Unknown: string
   }
   charts: {
-    topFp16: string
-    topFp32: string
-    topBf16: string
-    platformComparison: string
-    devicePerformance: string
-  }
+      topFp16: string
+      topFp32: string
+      topBf16: string
+      topFp8: string
+      platformComparison: string
+      devicePerformance: string
+    }
   actions: {
     refresh: string
     search: string
@@ -110,6 +111,7 @@ export const translations: Record<Language, Translations> = {
       topFp16: "Top FP16 Performers",
       topFp32: "Top FP32 Performers",
       topBf16: "Top BF16 Performers",
+      topFp8: "Top FP8 E4M3FN Performers",
       platformComparison: "Platform Comparison",
       devicePerformance: "Device Performance Analysis",
     },
@@ -171,6 +173,7 @@ export const translations: Record<Language, Translations> = {
       topFp16: "FP16 性能排行",
       topFp32: "FP32 性能排行",
       topBf16: "BF16 性能排行",
+      topFp8: "FP8 E4M3FN 性能排行",
       platformComparison: "平台对比",
       devicePerformance: "设备性能分析",
     },

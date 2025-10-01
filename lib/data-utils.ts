@@ -39,11 +39,19 @@ export function parseMarkdownTable(markdown: string): GPUPerformanceData[] {
         const fp32 = Number.parseFloat(cells[1]) || 0
         const fp16 = Number.parseFloat(cells[2]) || 0
         const bf16 = Number.parseFloat(cells[3]) || 0
-        const note = cells[4]
-        const contributor = cells[5].replace(/\[([^\]]+)\]$$[^)]+$$/g, "$1")
+        // FP8 E4M3FN 在第4列(索引3之后),可能不存在或为空
+        const fp8Value = cells.length >= 7 ? cells[4].trim() : ""
+        const fp8 = fp8Value && fp8Value !== "" && fp8Value !== "-"
+          ? Number.parseFloat(fp8Value)
+          : undefined
+        // 如果有 FP8 列,note 和 contributor 的位置会后移
+        const noteIndex = cells.length >= 7 ? 5 : 4
+        const contributorIndex = cells.length >= 7 ? 6 : 5
+        const note = cells[noteIndex] || ""
+        const contributor = cells[contributorIndex] || "" // 保留原始 Markdown 格式
         const platform = extractPlatform(note)
 
-        return {
+        const result: GPUPerformanceData = {
           device,
           fp32,
           fp16,
@@ -52,6 +60,13 @@ export function parseMarkdownTable(markdown: string): GPUPerformanceData[] {
           contributor,
           platform,
         }
+
+        // 只在 FP8 值有效时添加
+        if (fp8 !== undefined && !isNaN(fp8) && fp8 > 0) {
+          result.fp8 = fp8
+        }
+
+        return result
       }
       return null
     })
@@ -125,7 +140,13 @@ export function calculatePlatformStats(data: GPUPerformanceData[]): PlatformStat
       const avgFp16 = devices.reduce((sum, d) => sum + d.fp16, 0) / count
       const avgBf16 = devices.reduce((sum, d) => sum + d.bf16, 0) / count
 
-      return {
+      // 计算 FP8 平均值 - 只统计有 FP8 值的设备
+      const fp8Devices = devices.filter(d => d.fp8 !== undefined && !isNaN(d.fp8))
+      const avgFp8 = fp8Devices.length > 0
+        ? fp8Devices.reduce((sum, d) => sum + (d.fp8 || 0), 0) / fp8Devices.length
+        : undefined
+
+      const stats: PlatformStats = {
         platform,
         count,
         avgFp32: Math.round(avgFp32 * 100) / 100,
@@ -133,14 +154,31 @@ export function calculatePlatformStats(data: GPUPerformanceData[]): PlatformStat
         avgBf16: Math.round(avgBf16 * 100) / 100,
         devices,
       }
+
+      if (avgFp8 !== undefined) {
+        stats.avgFp8 = Math.round(avgFp8 * 100) / 100
+      }
+
+      return stats
     })
     .sort((a, b) => b.avgFp16 - a.avgFp16)
 }
 
 export function getTopPerformers(
   data: GPUPerformanceData[],
-  metric: "fp32" | "fp16" | "bf16" = "fp16",
+  metric: "fp32" | "fp16" | "bf16" | "fp8" = "fp16",
   limit = 5,
 ): GPUPerformanceData[] {
-  return [...data].sort((a, b) => b[metric] - a[metric]).slice(0, limit)
+  // 对于 FP8,只考虑有该值的设备
+  const filteredData = metric === "fp8"
+    ? data.filter(d => d.fp8 !== undefined && !isNaN(d.fp8))
+    : data
+
+  return [...filteredData]
+    .sort((a, b) => {
+      const aValue = a[metric] || 0
+      const bValue = b[metric] || 0
+      return bValue - aValue
+    })
+    .slice(0, limit)
 }

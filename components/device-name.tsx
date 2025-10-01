@@ -24,7 +24,7 @@ export const DeviceName = memo(function DeviceName({ name, className = "font-mon
                 <img width="16" height="16" src="https://img.icons8.com/color/48/nvidia.png" alt="nvidia" />
             )}
             {isAmd && (
-                <img width="16" height="16" src="https://img.icons8.com/ios-filled/50/amd.png" alt="amd" />
+                <img width="16" height="16" src="https://img.icons8.com/ios-filled/50/FA5252/amd.png" alt="amd" />
             )}
             {isAscend && (
                 <img width="16" height="16" src="https://img.icons8.com/external-tal-revivo-color-tal-revivo/24/external-huawei-technologies-company-a-chinese-multinational-technology-provides-telecommunications-equipment-and-consumer-electronics-logo-color-tal-revivo.png" alt="huawei-ascend" />

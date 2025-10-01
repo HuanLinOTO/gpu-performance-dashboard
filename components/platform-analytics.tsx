@@ -51,6 +51,7 @@ interface DevicePlatformComparison {
       fp32: number
       fp16: number
       bf16: number
+      fp8?: number // 可选
       count: number
     }
   }
@@ -160,13 +161,25 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
         const avgFp32 = items.reduce((sum, item) => sum + item.fp32, 0) / items.length
         const avgFp16 = items.reduce((sum, item) => sum + item.fp16, 0) / items.length
         const avgBf16 = items.reduce((sum, item) => sum + item.bf16, 0) / items.length
+        
+        // 计算 FP8 平均值 - 只统计有值的
+        const fp8Items = items.filter(item => item.fp8 !== undefined && !isNaN(item.fp8))
+        const avgFp8 = fp8Items.length > 0
+          ? fp8Items.reduce((sum, item) => sum + (item.fp8 || 0), 0) / fp8Items.length
+          : undefined
 
-        deviceComparison.platforms[platform] = {
+        const platformStats: any = {
           fp32: avgFp32,
           fp16: avgFp16,
           bf16: avgBf16,
           count: items.length
         }
+
+        if (avgFp8 !== undefined) {
+          platformStats.fp8 = avgFp8
+        }
+
+        deviceComparison.platforms[platform] = platformStats
       })
 
       comparisons.push(deviceComparison)
@@ -194,13 +207,22 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
     const selectedComparison = deviceComparisons.find(d => d.device === selectedDevice)
     if (!selectedComparison) return []
 
-    return Object.entries(selectedComparison.platforms).map(([platform, stats]) => ({
-      platform: t.platforms[platform as keyof typeof t.platforms] || platform,
-      FP32: Number(stats.fp32.toFixed(2)),
-      FP16: Number(stats.fp16.toFixed(2)),
-      BF16: Number(stats.bf16.toFixed(2)),
-      count: stats.count
-    }))
+    return Object.entries(selectedComparison.platforms).map(([platform, stats]) => {
+      const dataPoint: any = {
+        platform: t.platforms[platform as keyof typeof t.platforms] || platform,
+        FP32: Number(stats.fp32.toFixed(2)),
+        FP16: Number(stats.fp16.toFixed(2)),
+        BF16: Number(stats.bf16.toFixed(2)),
+        count: stats.count
+      }
+      
+      // 只在有 FP8 值时添加
+      if (stats.fp8 !== undefined) {
+        dataPoint['FP8 E4M3FN'] = Number(stats.fp8.toFixed(2))
+      }
+      
+      return dataPoint
+    })
   }, [selectedDevice, deviceComparisons, t])
 
   // 如果没有选择设备，默认选择第一个
@@ -504,6 +526,9 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                       <Bar dataKey="FP32" fill="#3b82f6" name="FP32" />
                       <Bar dataKey="FP16" fill="#10b981" name="FP16" />
                       <Bar dataKey="BF16" fill="#8b5cf6" name="BF16" />
+                      {chartData.some(d => d['FP8 E4M3FN'] !== undefined) && (
+                        <Bar dataKey="FP8 E4M3FN" fill="#f59e0b" name="FP8 E4M3FN" />
+                      )}
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -551,6 +576,12 @@ export function PlatformAnalytics({ data, language }: PlatformAnalyticsProps) {
                           <span>BF16:</span>
                           <span className="font-mono">{stats.bf16.toFixed(2)} TFLOPS</span>
                         </div>
+                        {stats.fp8 !== undefined && (
+                          <div className="flex justify-between">
+                            <span>FP8 E4M3FN:</span>
+                            <span className="font-mono">{stats.fp8.toFixed(2)} TFLOPS</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

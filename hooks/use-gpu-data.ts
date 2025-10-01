@@ -79,6 +79,11 @@ export function useFilteredData(
           aValue = a.platform || "Unknown"
           bValue = b.platform || "Unknown"
           break
+        case "fp8":
+          // FP8 排序时,没有值的排在后面
+          aValue = a.fp8 ?? -1
+          bValue = b.fp8 ?? -1
+          break
         default:
           aValue = a[sortField]
           bValue = b[sortField]

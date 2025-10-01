@@ -37,6 +37,8 @@ export function ContributorCell({ contributor }: ContributorCellProps) {
     }
 
     const githubInfo = extractGitHubInfo(contributor)
+    console.log(contributor);
+
 
     if (githubInfo) {
         const avatarUrl = `https://github.com/${githubInfo.username}.png?size=32`
