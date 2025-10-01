@@ -21,6 +21,11 @@ const friendLinks: FriendLink[] = [
         url: "https://www.svcfusion.com",
         description: "超强 AI 翻唱整合包 |  Powerful AI Cover Package"
     },
+    {
+        name: "优云智算 | UCloud",
+        url: "https://passport.compshare.cn/register?referral_code=1ywd4VqDKknFWCEUZvOoWo",
+        description: "免费领取 10 元体验，认证后 95 折！"
+    },
     // 可以添加更多友链
 ]
 
