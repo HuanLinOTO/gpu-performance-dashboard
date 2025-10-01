@@ -7,9 +7,10 @@ const PLATFORM_TAGS = {
   GCP: "GCP",
   实体机: "Physical Machine",
   笔记本: "Laptop",
-  docker: "Docker",
+  openi: "OpenI",
   优云智算: "UCloud",
   智算云扉: "AIGate",
+  docker: "Docker",
 }
 
 export function extractPlatform(note: string): string {
