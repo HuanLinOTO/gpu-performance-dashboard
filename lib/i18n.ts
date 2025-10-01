@@ -35,6 +35,7 @@ export interface Translations {
   platforms: {
     GCP: string
     "Google Colab": string
+    Kaggle: string
     "Physical Machine": string
     Laptop: string
     Docker: string
@@ -99,6 +100,7 @@ export const translations: Record<Language, Translations> = {
     platforms: {
       GCP: "GCP",
       "Google Colab": "Google Colab",
+      Kaggle: "Kaggle",
       "Physical Machine": "Physical Machine",
       Laptop: "Laptop",
       Docker: "Docker",
@@ -161,6 +163,7 @@ export const translations: Record<Language, Translations> = {
     platforms: {
       GCP: "GCP",
       "Google Colab": "Google Colab",
+      Kaggle: "Kaggle",
       "Physical Machine": "实体机",
       Laptop: "笔记本",
       Docker: "Docker",

@@ -6,6 +6,7 @@ const GITHUB_RAW_URL =
 const PLATFORM_TAGS = {
   GCP: "GCP",
   colab: "Google Colab",
+  kaggle: "Kaggle",
   实体机: "Physical Machine",
   笔记本: "Laptop",
   openi: "OpenI",
