@@ -21,21 +21,25 @@ interface PlatformAnalyticsProps {
 
 const PLATFORM_COLORS = {
   GCP: "#3b82f6",
+  "Google Colab": "#eab308",
   "Physical Machine": "#10b981",
   Laptop: "#8b5cf6",
   Docker: "#f59e0b",
   UCloud: "#06b6d4",
   AIGate: "#ec4899",
+  OpenI: "#6366f1",
   Unknown: "#6b7280",
 }
 
 const PLATFORM_BG_COLORS = {
   GCP: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+  "Google Colab": "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
   "Physical Machine": "bg-green-500/20 text-green-300 border-green-500/30",
   Laptop: "bg-purple-500/20 text-purple-300 border-purple-500/30",
   Docker: "bg-orange-500/20 text-orange-300 border-orange-500/30",
   UCloud: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
   AIGate: "bg-pink-500/20 text-pink-300 border-pink-500/30",
+  OpenI: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
   Unknown: "bg-gray-500/20 text-gray-300 border-gray-500/30",
 }
 

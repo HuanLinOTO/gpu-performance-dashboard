@@ -34,11 +34,13 @@ export interface Translations {
   }
   platforms: {
     GCP: string
+    "Google Colab": string
     "Physical Machine": string
     Laptop: string
     Docker: string
     UCloud: string
     AIGate: string
+    OpenI: string
     Unknown: string
   }
   charts: {
@@ -95,11 +97,13 @@ export const translations: Record<Language, Translations> = {
     },
     platforms: {
       GCP: "GCP",
+      "Google Colab": "Google Colab",
       "Physical Machine": "Physical Machine",
       Laptop: "Laptop",
       Docker: "Docker",
       UCloud: "UCloud",
       AIGate: "AIGate",
+      OpenI: "OpenI",
       Unknown: "Unknown",
     },
     charts: {
@@ -154,11 +158,13 @@ export const translations: Record<Language, Translations> = {
     },
     platforms: {
       GCP: "GCP",
+      "Google Colab": "Google Colab",
       "Physical Machine": "实体机",
       Laptop: "笔记本",
       Docker: "Docker",
       UCloud: "优云智算",
       AIGate: "智算云扉",
+      OpenI: "OpenI",
       Unknown: "未知",
     },
     charts: {
