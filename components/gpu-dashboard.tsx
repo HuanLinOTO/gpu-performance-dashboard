@@ -12,6 +12,7 @@ import { FilterControls } from "./filter-controls"
 import { PlatformAnalytics } from "./platform-analytics"
 import { LanguageToggle } from "./language-toggle"
 import { FriendLinks } from "./friend-links"
+import { SiteDescription } from "./site-description"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -138,6 +139,15 @@ export function GPUDashboard() {
       </motion.div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Site Description */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <SiteDescription />
+        </motion.div>
+
         {/* Stats Overview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
