@@ -4,38 +4,43 @@ import { motion } from "framer-motion"
 import { ExternalLink } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { handleAdLinkClick, detectAdPlatform } from "@/lib/ad-utils"
+import { useLanguage } from "@/hooks/use-language"
+import { useTranslation, type Translations } from "@/lib/i18n"
 
 interface FriendLink {
     name: string
     url: string
-    description: string
+    descriptionKey: keyof Translations['footer']['friendLinks']['links']
 }
 
 const friendLinks: FriendLink[] = [
     {
         name: "Torch Performance Test",
         url: "https://github.com/zzc0721/torch-performance-test-data",
-        description: "数据来源 | Data Source"
+        descriptionKey: "torchPerformanceTest"
     },
     {
         name: "SVCFusion | AI 翻唱",
         url: "https://www.svcfusion.com",
-        description: "超强 AI 翻唱整合包 |  Powerful AI Cover Package"
+        descriptionKey: "svcFusion"
     },
     {
         name: "优云智算 | UCloud",
         url: "https://passport.compshare.cn/register?referral_code=1ywd4VqDKknFWCEUZvOoWo",
-        description: "免费领取 10 元体验，认证后 95 折！"
+        descriptionKey: "ucloud"
     },
     {
         name: "智算云扉 | AIGate",
         url: "https://account.aigate.cc/?channel=E4Z7B2W5C&coupon=AM8HLIZE2C",
-        description: "注册领取 20 算力加 16h 4090D体验"
+        descriptionKey: "aigate"
     },
     // 可以添加更多友链
 ]
 
 export function FriendLinks() {
+    const { language } = useLanguage()
+    const t = useTranslation(language)
+
     return (
         <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm mt-16">
             <div className="container mx-auto px-4 py-12">
@@ -48,10 +53,10 @@ export function FriendLinks() {
                     {/* 友链标题 */}
                     <div className="text-center space-y-2">
                         <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                            友情链接 | Friend Links
+                            {language === "zh" ? "友情链接" : "Friend Links"}
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                            感谢以下项目和组织的支持 | Thanks to the following projects and organizations
+                            {t.footer.friendLinks.subtitle}
                         </p>
                     </div>
 
@@ -86,7 +91,7 @@ export function FriendLinks() {
                                                             {link.name}
                                                         </h4>
                                                         <p className="text-xs text-muted-foreground line-clamp-2">
-                                                            {link.description}
+                                                            {t.footer.friendLinks.links[link.descriptionKey]}
                                                         </p>
                                                     </div>
                                                     <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
@@ -107,7 +112,7 @@ export function FriendLinks() {
                                 <span>GPU Performance Leaderboard</span>
                             </div>
                             <span className="hidden sm:inline">•</span>
-                            <span>© 2025 多玩幻灵 qwq</span>
+                            <span>{t.footer.copyright}</span>
                             <span className="hidden sm:inline">•</span>
                             <a
                                 href="https://github.com/zzc0721/torch-performance-test-data"
@@ -115,7 +120,16 @@ export function FriendLinks() {
                                 rel="noopener noreferrer"
                                 className="hover:text-primary transition-colors"
                             >
-                                View on GitHub
+                                {t.footer.viewOnGithub}
+                            </a>
+                            <span className="hidden sm:inline">•</span>
+                            <a
+                                href="http://beian.miit.gov.cn/?spm=a2c4g.11174386.n2.3.41d561dbuHrgEv"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:text-primary transition-colors"
+                            >
+                                {t.footer.icpLicense}
                             </a>
                         </div>
                     </div>

@@ -66,6 +66,21 @@ export interface Translations {
     loadingData: string
     errorLoading: string
   }
+  footer: {
+    friendLinks: {
+      title: string
+      subtitle: string
+      links: {
+        torchPerformanceTest: string
+        svcFusion: string
+        ucloud: string
+        aigate: string
+      }
+    }
+    copyright: string
+    viewOnGithub: string
+    icpLicense: string
+  }
 }
 
 export const translations: Record<Language, Translations> = {
@@ -138,6 +153,21 @@ export const translations: Record<Language, Translations> = {
       loadingData: "Loading GPU performance data...",
       errorLoading: "Error Loading Data",
     },
+    footer: {
+      friendLinks: {
+        title: "Friend Links",
+        subtitle: "Thanks to the following projects and organizations",
+        links: {
+          torchPerformanceTest: "Data Source",
+          svcFusion: "Powerful AI Cover Package",
+          ucloud: "Get ¥10 free trial, 5% off after verification!",
+          aigate: "Register to get 20 credits + 16h 4090D trial"
+        }
+      },
+      copyright: "© 2025 多玩幻灵 qwq",
+      viewOnGithub: "View on GitHub",
+      icpLicense: "苏ICP备2024094491号-3"
+    },
   },
   zh: {
     leaderboard: {
@@ -208,6 +238,21 @@ export const translations: Record<Language, Translations> = {
     errors: {
       loadingData: "正在加载 GPU 性能数据...",
       errorLoading: "数据加载错误",
+    },
+    footer: {
+      friendLinks: {
+        title: "友情链接",
+        subtitle: "感谢以下项目和组织的支持",
+        links: {
+          torchPerformanceTest: "数据来源",
+          svcFusion: "超强 AI 翻唱整合包",
+          ucloud: "免费领取 10 元体验，认证后 95 折！",
+          aigate: "注册领取 20 算力加 16h 4090D体验"
+        }
+      },
+      copyright: "© 2025 多玩幻灵 qwq",
+      viewOnGithub: "在 GitHub 上查看",
+      icpLicense: "苏ICP备2024094491号-3"
     },
   },
 }
