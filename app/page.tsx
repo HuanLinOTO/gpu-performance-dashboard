@@ -1,4 +1,4 @@
-import { DashboardWithEntrance } from "@/components/dashboard-with-entrance"
+import { LeaderboardWithEntrance } from "@/components/leaderboard-with-entrance"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
-      <h1 className="sr-only">GPU Performance Dashboard - Compare GPU Benchmarks</h1>
+      <h1 className="sr-only">GPU Performance Leaderboard - Compare GPU Benchmarks</h1>
       <h2 className="sr-only">Real-World GPU Performance Data for AI and Machine Learning</h2>
-      <DashboardWithEntrance />
+      <LeaderboardWithEntrance />
     </main>
   )
 }

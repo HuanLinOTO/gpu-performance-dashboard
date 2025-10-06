@@ -104,7 +104,7 @@ export function FriendLinks() {
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-muted-foreground">
                             <div className="flex items-center gap-2">
                                 <img src="/favicon.svg" alt="Logo" className="w-5 h-5" />
-                                <span>GPU Performance Dashboard</span>
+                                <span>GPU Performance Leaderboard</span>
                             </div>
                             <span className="hidden sm:inline">•</span>
                             <span>© 2025 Community Driven Project</span>

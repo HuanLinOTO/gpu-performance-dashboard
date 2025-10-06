@@ -1,4 +1,4 @@
-# GPU Performance Dashboard - Robots.txt
+# GPU Performance Leaderboard - Robots.txt
 
 # Allow all crawlers
 User-agent: *
@@ -8,7 +8,7 @@ Allow: /
 Crawl-delay: 0.5
 
 # Sitemap location
-Sitemap: https://gpu-performance-dashboard.vercel.app/sitemap.xml
+Sitemap: https://gpu-performance-leaderboard.vercel.app/sitemap.xml
 
 # Block admin paths if any
 Disallow: /api/

@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated theme to match dark analytics dashboard design */
+  /* Updated theme to match dark analytics leaderboard design */
   --background: oklch(0.08 0.01 240);
   --foreground: oklch(0.98 0.01 240);
   --card: oklch(0.12 0.02 240);
@@ -120,6 +120,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

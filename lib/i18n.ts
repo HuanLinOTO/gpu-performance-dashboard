@@ -1,7 +1,7 @@
 export type Language = "en" | "zh"
 
 export interface Translations {
-  dashboard: {
+  leaderboard: {
     title: string
     subtitle: string
     description: {
@@ -70,11 +70,11 @@ export interface Translations {
 
 export const translations: Record<Language, Translations> = {
   en: {
-    dashboard: {
-      title: "GPU Performance Dashboard",
+    leaderboard: {
+      title: "GPU Performance Leaderboard",
       subtitle: "Comprehensive benchmarking data from the community",
       description: {
-        title: "About This Dashboard",
+        title: "About This Leaderboard",
         features: [
           "View FP32, FP16, BF16, and FP8 E4M3FN performance metrics for various compute cards",
           "All data is manually benchmarked using real scripts (except Huawei cards), not paper specifications. Anyone can upload their benchmark results",
@@ -141,7 +141,7 @@ export const translations: Record<Language, Translations> = {
     },
   },
   zh: {
-    dashboard: {
+    leaderboard: {
       title: "GPU 性能仪表板",
       subtitle: "来自社区的综合基准测试数据",
       description: {

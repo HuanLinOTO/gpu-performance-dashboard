@@ -19,7 +19,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
     useEffect(() => {
         // Check localStorage for saved language preference
-        const saved = localStorage.getItem("gpu-dashboard-language") as Language
+        const saved = localStorage.getItem("gpu-leaderboard-language") as Language
         if (saved && (saved === "en" || saved === "zh")) {
             console.log("Loading saved language:", saved)
             setLanguage(saved)
@@ -37,8 +37,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
         const newLang = language === "en" ? "zh" : "en"
         console.log("Switching to:", newLang)
         setLanguage(newLang)
-        localStorage.setItem("gpu-dashboard-language", newLang)
-        console.log("Language updated in localStorage:", localStorage.getItem("gpu-dashboard-language"))
+        localStorage.setItem("gpu-leaderboard-language", newLang)
+        console.log("Language updated in localStorage:", localStorage.getItem("gpu-leaderboard-language"))
     }
 
     return (

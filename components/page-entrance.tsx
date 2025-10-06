@@ -94,7 +94,7 @@ export function PageEntrance({ children, isDataLoaded }: PageEntranceProps) {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
                 >
-                    GPU Performance Dashboard
+                    GPU Performance Leaderboard
                 </motion.h1>
 
                 {/* Subtitle Animation */}
