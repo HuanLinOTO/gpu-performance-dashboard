@@ -1,6 +1,7 @@
 export interface GPUPerformanceData {
   device: string
   fp32: number
+  tf32: number
   fp16: number
   bf16: number
   fp8?: number // FP8 E4M3FN - 可选,因为旧数据可能没有这个值
@@ -19,7 +20,7 @@ export interface PlatformStats {
   devices: GPUPerformanceData[]
 }
 
-export type SortField = "device" | "fp32" | "fp16" | "bf16" | "fp8" | "platform"
+export type SortField = "device" | "fp32" | "tf32" | "fp16" | "bf16" | "fp8" | "platform"
 export type SortDirection = "asc" | "desc"
 
 export interface FilterOptions {

@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { handleAdLinkClick, getAdPlatformUrl, type AdPlatform } from "@/lib/ad-utils"
 
 interface PerformanceTableProps {
@@ -38,6 +38,20 @@ const PLATFORM_COLORS = {
   OpenI: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
   Unknown: "bg-gray-500/20 text-gray-300 border-gray-500/30",
 }
+
+type MetricKey = "fp32" | "tf32" | "fp16" | "bf16"
+
+const METRIC_CONFIGS: Array<{
+  key: MetricKey
+  label: string
+  sortField: Extract<SortField, MetricKey>
+  color: string
+}> = [
+    { key: "fp32", label: "FP32", sortField: "fp32", color: "bg-chart-1" },
+    { key: "tf32", label: "TF32", sortField: "tf32", color: "bg-chart-4" },
+    { key: "fp16", label: "FP16", sortField: "fp16", color: "bg-chart-2" },
+    { key: "bf16", label: "BF16", sortField: "bf16", color: "bg-chart-3" },
+  ]
 
 function SortButton({
   field,
@@ -97,7 +111,7 @@ function PerformanceBar({
     percentage = Math.min((logValue / logMax) * 100, 100)
   } else {
     // 线性刻度
-    percentage = Math.min((value / max) * 100, 100)
+    percentage = max > 0 ? Math.min((value / max) * 100, 100) : 0
   }
 
   return (
@@ -137,13 +151,24 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
 
   // 获取有效的 FP8 数据用于计算最大值
   const fp8Values = data.filter(d => d.fp8 !== undefined && !isNaN(d.fp8) && d.fp8 > 0)
+  const metricMaxValues = useMemo(() => {
+    return METRIC_CONFIGS.reduce((acc, { key }) => {
+      const values = data.map((item) => item[key])
+      const max = values.length > 0 ? Math.max(...values) : 0
+      acc[key] = Number.isFinite(max) ? max : 0
+      return acc
+    }, {} as Record<MetricKey, number>)
+  }, [data])
 
-  const maxValues = {
-    fp32: Math.max(...data.map((d) => d.fp32)),
-    fp16: Math.max(...data.map((d) => d.fp16)),
-    bf16: Math.max(...data.map((d) => d.bf16)),
-    fp8: fp8Values.length > 0 ? Math.max(...fp8Values.map((d) => d.fp8!)) : 1,
-  }
+  const visibleMetrics = useMemo(() => {
+    if (data.length === 0) {
+      return METRIC_CONFIGS
+    }
+    return METRIC_CONFIGS.filter(({ key }) => data.some((item) => item[key] > 0))
+  }, [data])
+
+  const fp8Max = fp8Values.length > 0 ? Math.max(...fp8Values.map((d) => d.fp8!)) : 1
+  const animationStride = Math.max(visibleMetrics.length + (hasFp8Column ? 1 : 0), 1)
 
   return (
     <Card className="border-border/50">
@@ -179,21 +204,18 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
                     {t.table.platform}
                   </SortButton>
                 </TableHead>
-                <TableHead className="w-[140px]">
-                  <SortButton field="fp32" currentField={sortField} direction={sortDirection} onSort={onSort}>
-                    FP32
-                  </SortButton>
-                </TableHead>
-                <TableHead className="w-[140px]">
-                  <SortButton field="fp16" currentField={sortField} direction={sortDirection} onSort={onSort}>
-                    FP16
-                  </SortButton>
-                </TableHead>
-                <TableHead className="w-[140px]">
-                  <SortButton field="bf16" currentField={sortField} direction={sortDirection} onSort={onSort}>
-                    BF16
-                  </SortButton>
-                </TableHead>
+                {visibleMetrics.map((metric) => (
+                  <TableHead key={metric.key} className="w-[140px]">
+                    <SortButton
+                      field={metric.sortField}
+                      currentField={sortField}
+                      direction={sortDirection}
+                      onSort={onSort}
+                    >
+                      {metric.label}
+                    </SortButton>
+                  </TableHead>
+                ))}
                 {hasFp8Column && (
                   <TableHead className="w-[140px]">
                     <SortButton field="fp8" currentField={sortField} direction={sortDirection} onSort={onSort}>
@@ -206,68 +228,81 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((item, index) => (
-                <AnimatedTableRow
-                  key={`${item.device}-${index}`}
-                  index={index}
-                  className="border-border/30 hover:bg-accent/30 transition-colors"
-                >
-                  <TableCell className="font-medium">
-                    <DeviceName name={item.device} />
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "text-xs font-medium",
-                        PLATFORM_COLORS[item.platform as keyof typeof PLATFORM_COLORS] || PLATFORM_COLORS.Unknown,
-                        (item.platform === "UCloud" || item.platform === "AIGate") && "cursor-pointer hover:opacity-80 transition-opacity"
-                      )}
-                      onClick={(e) => {
-                        if (!item.platform) return;
-                        const platformMap: Record<string, AdPlatform> = {
-                          'UCloud': 'ucloud',
-                          'AIGate': 'aigate',
-                        };
-                        const adPlatform = platformMap[item.platform];
-                        if (adPlatform) {
-                          const url = getAdPlatformUrl(adPlatform);
-                          handleAdLinkClick(adPlatform, 'table', url, e);
-                        }
-                      }}
-                    >
-                      {t.platforms[item.platform as keyof typeof t.platforms] || item.platform}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <PerformanceBar value={item.fp32} max={maxValues.fp32} color="bg-chart-1" useLogScale={useLogScale} index={index * 4 + 0} />
-                  </TableCell>
-                  <TableCell>
-                    <PerformanceBar value={item.fp16} max={maxValues.fp16} color="bg-chart-2" useLogScale={useLogScale} index={index * 4 + 1} />
-                  </TableCell>
-                  <TableCell>
-                    <PerformanceBar value={item.bf16} max={maxValues.bf16} color="bg-chart-3" useLogScale={useLogScale} index={index * 4 + 2} />
-                  </TableCell>
-                  {hasFp8Column && (
-                    <TableCell>
-                      {item.fp8 !== undefined && !isNaN(item.fp8) && item.fp8 > 0 ? (
-                        <PerformanceBar value={item.fp8} max={maxValues.fp8} color="bg-chart-4" useLogScale={useLogScale} index={index * 4 + 3} />
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-mono w-16 text-right text-muted-foreground">N/A</span>
-                          <div className="flex-1 h-2 max-w-24" />
-                        </div>
-                      )}
+              {data.map((item, index) => {
+                const animationBase = index * animationStride
+
+                return (
+                  <AnimatedTableRow
+                    key={`${item.device}-${index}`}
+                    index={index}
+                    className="border-border/30 hover:bg-accent/30 transition-colors"
+                  >
+                    <TableCell className="font-medium">
+                      <DeviceName name={item.device} />
                     </TableCell>
-                  )}
-                  <TableCell>
-                    <div className="text-xs text-muted-foreground max-w-[200px] truncate">{item.note}</div>
-                  </TableCell>
-                  <TableCell>
-                    <ContributorCell contributor={item.contributor} />
-                  </TableCell>
-                </AnimatedTableRow>
-              ))}
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-xs font-medium",
+                          PLATFORM_COLORS[item.platform as keyof typeof PLATFORM_COLORS] || PLATFORM_COLORS.Unknown,
+                          (item.platform === "UCloud" || item.platform === "AIGate") && "cursor-pointer hover:opacity-80 transition-opacity"
+                        )}
+                        onClick={(e) => {
+                          if (!item.platform) return;
+                          const platformMap: Record<string, AdPlatform> = {
+                            'UCloud': 'ucloud',
+                            'AIGate': 'aigate',
+                          };
+                          const adPlatform = platformMap[item.platform];
+                          if (adPlatform) {
+                            const url = getAdPlatformUrl(adPlatform);
+                            handleAdLinkClick(adPlatform, 'table', url, e);
+                          }
+                        }}
+                      >
+                        {t.platforms[item.platform as keyof typeof t.platforms] || item.platform}
+                      </Badge>
+                    </TableCell>
+                    {visibleMetrics.map((metric, metricIndex) => (
+                      <TableCell key={`${metric.key}-${metricIndex}`}>
+                        {item[metric.key] > 0 ? (
+                          <PerformanceBar
+                            value={item[metric.key]}
+                            max={metricMaxValues[metric.key]}
+                            color={metric.color}
+                            useLogScale={useLogScale}
+                            index={animationBase + metricIndex}
+                          />
+                        ) : (
+                          <span className="text-sm font-medium text-muted-foreground">{t.table.empty}</span>
+                        )}
+                      </TableCell>
+                    ))}
+                    {hasFp8Column && (
+                      <TableCell>
+                        {item.fp8 !== undefined && !isNaN(item.fp8) && item.fp8 > 0 ? (
+                          <PerformanceBar
+                            value={item.fp8}
+                            max={fp8Max}
+                            color="bg-chart-4"
+                            useLogScale={useLogScale}
+                            index={animationBase + visibleMetrics.length}
+                          />
+                        ) : (
+                          <span className="text-sm font-medium text-muted-foreground">{t.table.empty}</span>
+                        )}
+                      </TableCell>
+                    )}
+                    <TableCell>
+                      <div className="text-xs text-muted-foreground max-w-[200px] truncate">{item.note}</div>
+                    </TableCell>
+                    <TableCell>
+                      <ContributorCell contributor={item.contributor} />
+                    </TableCell>
+                  </AnimatedTableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </div>

@@ -26,6 +26,7 @@ export interface Translations {
     note: string
     performanceData: string
     of: string
+    empty: string
   }
   stats: {
     totalDevices: string
@@ -113,6 +114,7 @@ export const translations: Record<Language, Translations> = {
       note: "Note",
       performanceData: "Performance Data",
       of: "of",
+      empty: "Empty",
     },
     stats: {
       totalDevices: "Total Devices",
@@ -199,6 +201,7 @@ export const translations: Record<Language, Translations> = {
       note: "备注",
       performanceData: "性能数据",
       of: "共",
+      empty: "暂无数据",
     },
     stats: {
       totalDevices: "设备总数",

@@ -24,54 +24,139 @@ export function extractPlatform(note: string): string {
   return "Unknown"
 }
 
+const HEADER_ALIASES: Record<string, string[]> = {
+  device: ["device", "gpu", "gpu名称", "gpu name"],
+  fp32: ["fp32"],
+  tf32: ["tf32"],
+  fp16: ["fp16"],
+  bf16: ["bf16"],
+  fp8: ["fp8", "fp8e4m3fn", "fp8 e4m3fn"],
+  note: ["note", "notes", "环境", "environment", "备注"],
+  contributor: ["contributor", "贡献者", "提交者", "author"],
+}
+
+function normalizeHeader(header: string): string {
+  return header
+    .toLowerCase()
+    .normalize("NFKC")
+    .replace(/[\s|:_-]+/g, "")
+}
+
+function findHeaderIndex(headerCells: string[], aliases: string[]): number | undefined {
+  for (const alias of aliases) {
+    const normalizedAlias = normalizeHeader(alias)
+    const index = headerCells.findIndex((cell) => normalizeHeader(cell) === normalizedAlias)
+    if (index !== -1) {
+      return index
+    }
+  }
+  return undefined
+}
+
+function isSeparatorRow(cells: string[]): boolean {
+  return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell))
+}
+
+function parseNumericCell(cells: string[], index: number | undefined): number {
+  if (index === undefined) {
+    return 0
+  }
+  const raw = cells[index] ?? ""
+  if (!raw || raw === "-" || raw === "—") {
+    return 0
+  }
+  const cleaned = raw.replace(/[,\s]/g, "")
+  const value = Number.parseFloat(cleaned)
+  return Number.isFinite(value) ? value : 0
+}
+
+function getCellValue(cells: string[], index: number | undefined): string {
+  if (index === undefined) {
+    return ""
+  }
+  return cells[index] ?? ""
+}
+
 export function parseMarkdownTable(markdown: string): GPUPerformanceData[] {
   const lines = markdown.split("\n")
-  const dataLines = lines.filter((line) => line.startsWith("|") && !line.includes("device") && !line.includes("---"))
+  let headerCells: string[] | null = null
+  const dataRows: string[][] = []
 
-  return dataLines
-    .map((line) => {
-      const cells = line
-        .split("|")
-        .map((cell) => cell.trim())
-        .filter((cell) => cell)
+  for (const rawLine of lines) {
+    const line = rawLine.trim()
+    if (!line.startsWith("|")) {
+      continue
+    }
 
-      if (cells.length >= 6) {
-        const device = cells[0]
-        const fp32 = Number.parseFloat(cells[1]) || 0
-        const fp16 = Number.parseFloat(cells[2]) || 0
-        const bf16 = Number.parseFloat(cells[3]) || 0
-        // FP8 E4M3FN 在第4列(索引3之后),可能不存在或为空
-        const fp8Value = cells.length >= 7 ? cells[4].trim() : ""
-        const fp8 = fp8Value && fp8Value !== "" && fp8Value !== "-"
-          ? Number.parseFloat(fp8Value)
-          : undefined
-        // 如果有 FP8 列,note 和 contributor 的位置会后移
-        const noteIndex = cells.length >= 7 ? 5 : 4
-        const contributorIndex = cells.length >= 7 ? 6 : 5
-        const note = cells[noteIndex] || ""
-        const contributor = cells[contributorIndex] || "" // 保留原始 Markdown 格式
-        const platform = extractPlatform(note)
+    const cells = line.split("|").slice(1, -1).map((cell) => cell.trim())
+    if (cells.length === 0) {
+      continue
+    }
 
-        const result: GPUPerformanceData = {
-          device,
-          fp32,
-          fp16,
-          bf16,
-          note,
-          contributor,
-          platform,
-        }
+    if (isSeparatorRow(cells)) {
+      continue
+    }
 
-        // 只在 FP8 值有效时添加
-        if (fp8 !== undefined && !isNaN(fp8) && fp8 > 0) {
-          result.fp8 = fp8
-        }
+    if (!headerCells) {
+      headerCells = cells
+      continue
+    }
 
-        return result
+    dataRows.push(cells)
+  }
+
+  if (!headerCells || dataRows.length === 0) {
+    return []
+  }
+
+  const indices = {
+    device: findHeaderIndex(headerCells, HEADER_ALIASES.device),
+    fp32: findHeaderIndex(headerCells, HEADER_ALIASES.fp32),
+    tf32: findHeaderIndex(headerCells, HEADER_ALIASES.tf32),
+    fp16: findHeaderIndex(headerCells, HEADER_ALIASES.fp16),
+    bf16: findHeaderIndex(headerCells, HEADER_ALIASES.bf16),
+    fp8: findHeaderIndex(headerCells, HEADER_ALIASES.fp8),
+    note: findHeaderIndex(headerCells, HEADER_ALIASES.note),
+    contributor: findHeaderIndex(headerCells, HEADER_ALIASES.contributor),
+  }
+
+  return dataRows
+    .map((cells) => {
+      const device = getCellValue(cells, indices.device)
+      if (!device) {
+        return null
       }
-      return null
+
+      const fp32 = parseNumericCell(cells, indices.fp32)
+      const tf32 = parseNumericCell(cells, indices.tf32)
+      const fp16 = parseNumericCell(cells, indices.fp16)
+      const bf16 = parseNumericCell(cells, indices.bf16)
+
+      const fp8Value = parseNumericCell(cells, indices.fp8)
+      const fp8 = fp8Value > 0 ? fp8Value : undefined
+
+      const note = getCellValue(cells, indices.note)
+      const contributor = getCellValue(cells, indices.contributor)
+      const platform = extractPlatform(note)
+
+      const result: GPUPerformanceData = {
+        device,
+        fp32,
+        tf32,
+        fp16,
+        bf16,
+        note,
+        contributor,
+        platform,
+      }
+
+      if (fp8 !== undefined) {
+        result.fp8 = fp8
+      }
+
+      return result
     })
-    .filter(Boolean) as GPUPerformanceData[]
+    .filter((item): item is GPUPerformanceData => item !== null)
 }
 
 // Cache variables
