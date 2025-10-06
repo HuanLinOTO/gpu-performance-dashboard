@@ -72,13 +72,12 @@ export const translations: Record<Language, Translations> = {
   en: {
     leaderboard: {
       title: "GPU Performance Leaderboard",
-      subtitle: "Comprehensive benchmarking data from the community",
+      subtitle: "",
       description: {
         title: "About This Leaderboard",
         features: [
-          "View FP32, FP16, BF16, and FP8 E4M3FN performance metrics for various compute cards",
-          "All data is manually benchmarked using real scripts (except Huawei cards), not paper specifications. Anyone can upload their benchmark results",
-          "Platform names are labeled to compare GPU performance differences across platforms"
+          "View FP32, FP16, and BF16 performance metrics for various compute cards",
+          "All data is manually benchmarked using real scripts (except Huawei cards), not paper specifications. Anyone can upload their benchmark results"
         ]
       },
       devices: "devices",
@@ -143,11 +142,11 @@ export const translations: Record<Language, Translations> = {
   zh: {
     leaderboard: {
       title: "GPU 性能仪表板",
-      subtitle: "来自社区的综合基准测试数据",
+      subtitle: "",
       description: {
         title: "关于本站",
         features: [
-          "支持查看不同计算卡的 FP32、FP16、BF16、FP8 E4M3FN 性能",
+          "支持查看不同计算卡的 FP32、FP16、BF16 性能",
           "每一条数据都由人工同 benchmark 脚本跑出来的，不直接搬运纸面数据，并且支持所有人上传自己跑出来的数据",
           "标注测试平台名称，可以对比不同平台显卡性能的差距"
         ]

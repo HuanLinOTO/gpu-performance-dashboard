@@ -107,7 +107,7 @@ export function FriendLinks() {
                                 <span>GPU Performance Leaderboard</span>
                             </div>
                             <span className="hidden sm:inline">•</span>
-                            <span>© 2025 Community Driven Project</span>
+                            <span>© 2025 多玩幻灵 qwq</span>
                             <span className="hidden sm:inline">•</span>
                             <a
                                 href="https://github.com/zzc0721/torch-performance-test-data"

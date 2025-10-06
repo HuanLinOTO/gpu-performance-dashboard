@@ -132,7 +132,8 @@ export function PerformanceTable({ data, sortField, sortDirection, onSort, langu
 
   // 检查是否应该显示 FP8 列 - 只要有至少一条数据定义了 fp8 属性(即使值为 undefined),就显示该列
   // 这样即使数据为空,只要数据结构支持 FP8,就会显示该列
-  const hasFp8Column = data.some(d => 'fp8' in d) || data.length === 0
+  // const hasFp8Column = data.some(d => 'fp8' in d) || data.length === 0
+  const hasFp8Column = false // 暂时隐藏 FP8 列
 
   // 获取有效的 FP8 数据用于计算最大值
   const fp8Values = data.filter(d => d.fp8 !== undefined && !isNaN(d.fp8) && d.fp8 > 0)

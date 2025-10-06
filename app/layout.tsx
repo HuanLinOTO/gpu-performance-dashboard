@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     default: "GPU Performance Leaderboard | Real-World Benchmark Data & Comparison",
     template: "%s | GPU Performance Leaderboard"
   },
-  description: "Compare GPU performance benchmarks with real-world data. FP32, FP16, BF16, and FP8 E4M3FN TFLOPS ratings for NVIDIA, AMD GPUs across platforms like GCP, Colab, Docker, and more. Community-driven benchmark database.",
+  description: "Compare GPU performance benchmarks with real-world data. FP32, FP16, and BF16 TFLOPS ratings for NVIDIA, AMD GPUs across platforms like GCP, Colab, Docker, and more. Community-driven benchmark database.",
   keywords: [
     "GPU benchmark",
     "GPU performance",
@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     "FP32 performance",
     "FP16 benchmark",
     "BF16 TFLOPS",
-    "FP8 E4M3FN",
     "AI GPU",
     "deep learning GPU",
     "machine learning hardware",
@@ -53,7 +52,7 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "GPU Performance Leaderboard",
     title: "GPU Performance Leaderboard - Real-World GPU Benchmark Database",
-    description: "Compare GPU performance with community-driven benchmark data. FP32, FP16, BF16, FP8 ratings for NVIDIA & AMD GPUs across multiple platforms.",
+    description: "Compare GPU performance with community-driven benchmark data. FP32, FP16, and BF16 ratings for NVIDIA & AMD GPUs across multiple platforms.",
     images: [
       {
         url: "/sharelink_img.png",
@@ -66,7 +65,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "GPU Performance Leaderboard - Real-World GPU Benchmarks",
-    description: "Compare GPU performance with community-driven benchmark data. FP32, FP16, BF16, FP8 ratings across multiple platforms.",
+    description: "Compare GPU performance with community-driven benchmark data. FP32, FP16, and BF16 ratings across multiple platforms.",
     images: ["/sharelink_img.png"],
     creator: "@gpu_leaderboard",
   },
@@ -129,7 +128,7 @@ export default function RootLayout({
     },
     featureList: [
       'GPU Performance Comparison',
-      'FP32, FP16, BF16, FP8 Benchmarks',
+      'FP32, FP16, BF16 Benchmarks',
       'Multi-platform Support',
       'Community Contributions',
       'Real-time Data Updates',
